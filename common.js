@@ -1,14 +1,22 @@
 module.exports = {
-  handle: (handler) => {
+  handle: (handler) =>
     process.stdin.on('data', (chunk) => {
       try {
-        handler(JSON.parse(chunk), (value) => {
-          console.log(JSON.stringify(value))
-          process.exit(0);
+        handler(JSON.parse(chunk), (err, value) => {
+          if (err) {
+            handleError(err);
+          } else {
+            console.log(JSON.stringify(value));
+            process.exit(0);
+          }
         });
-      } catch (e) {
-        process.exit(1);
+      } catch (err) {
+        handleError(err);
       }
-    })
-  },
+    }),
 };
+
+function handleError(err) {
+  console.error(JSON.stringify(err));
+  process.exit(1);
+}

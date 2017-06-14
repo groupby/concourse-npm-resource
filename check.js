@@ -1,13 +1,22 @@
+#!/usr/bin/env node
+
 const handle = require('./common').handle;
-const RegClient = require('npm-registry-client');
+const available = require('available-versions');
 
-const client = new RegClient({ isFromCI: true });
-const uri = "https://registry.npmjs.org/npm"
+handle((opts, cb) => {
+  const hasVersion = !!opts.version;
+  const query = { name: opts.source.package };
+  if (hasVersion) {
+    query.version = opts.version.version;
+  }
 
-handle((opts, done) => {
-
-  client.distTags.fetch(uri, { package: '@storefront/core' }, () => {
-
-    done([]);
-  });
+  available(query)
+    .then((res) => {
+      if (hasVersion) {
+        cb(null, [opts.version.version, ...res.versions].map((version) => ({ version })));
+      } else {
+        cb(null, [{ version: res.versions[res.versions.length - 1] }])
+      }
+    })
+    .catch((err) => cb(err));
 });
