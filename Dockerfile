@@ -1,8 +1,6 @@
 FROM mhart/alpine-node
+MAINTAINER Ben Teichman <ben.teichman@groupbyinc.com>
 
-RUN npm install available-versions --prefix /opt/resource
+RUN npm install available-versions semver-diff --prefix /opt/resource
 
-COPY in.js /opt/resource/in
-COPY out.js /opt/resource/out
-COPY check.js /opt/resource/check
-COPY common.js /opt/resource/common
+COPY assets/ /opt/resource
