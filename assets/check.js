@@ -16,11 +16,7 @@ handle((opts, cb) => {
     .then(({ versions }) => {
       if (hasVersion) {
         // if (versions.length !== 0 && (!diff || semverDiff(query.version, versions[versions.length - 1]) === diff)) {
-        if (versions.length !== 0) {
-          cb(null, [query.version, ...versions].map((version) => ({ version })));
-        } else {
-          cb(null, [{ version: query.version }])
-        }
+        cb(null, [query.version, ...versions].map((version) => ({ version })));
       } else {
         cb(null, [{ version: versions[versions.length - 1] }])
       }
