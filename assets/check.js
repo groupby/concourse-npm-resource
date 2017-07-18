@@ -15,10 +15,10 @@ handle((opts, cb) => {
   available(query)
     .then(({ versions }) => {
       if (hasVersion) {
-        cb(null, [
-          query.version,
-          ...versions.filter((version) => !diff || semverDiff(query.version, version) === diff)
-        ].map((version) => ({ version })));
+        const filtered = [query.version, ...versions].filter((version, index, arr) =>
+          !diff || (index > 0 && semverDiff(arr[index - 1], version) === diff));
+
+        cb(null, filtered.map((version) => ({ version })));
       } else {
         cb(null, [{ version: versions[versions.length - 1] }])
       }
